@@ -8,6 +8,6 @@ public class CustomerController {
 
     @GetMapping("/Login")
     public String showLoginForm() {
-        return "login";
+        return "auth";
     }
 }

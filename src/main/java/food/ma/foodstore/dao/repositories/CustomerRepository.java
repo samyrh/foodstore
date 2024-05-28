@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // You can define custom query methods here if needed
+    Customer findCustomerByUsername(String username);
 }

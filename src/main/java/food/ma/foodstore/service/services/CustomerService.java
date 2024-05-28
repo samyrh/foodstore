@@ -11,13 +11,9 @@ import java.util.List;
 @Service
 public class CustomerService implements CustomerManager {
 
-    private final CustomerRepository customerRepository;
-
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    private  CustomerRepository customerRepository;
 
-        this.customerRepository = customerRepository;
-    }
 
     @Override
     public Customer createCustomer(Customer customer) {

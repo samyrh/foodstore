@@ -146,16 +146,12 @@
             <p class="text" th:text="${menuItem.description}"></p>
             <!-- Product Actions -->
             <div class="actions">
-              <!-- Quantity Input -->
-              <div class="quantity">
-                <input type="number" class="qty-input" step="1" min="1" max="100" name="quantity" value="1" title="Qty" />
-                <button class="quantity-plus qty-btn"><i class="far fa-chevron-up"></i></button>
-                <button class="quantity-minus qty-btn"><i class="far fa-chevron-down"></i></button>
-              </div>
-              <!-- Add to Cart Button -->
-              <button class="as-btn">Add to Cart</button>
+              <!-- Add to Cart Icon Button -->
+              <a class="icon-btn" th:href="@{'/addtocart/' + ${menuItem.itemId}}">
+                <i class="fas fa-cart-plus"></i> <!-- Font Awesome shopping cart plus icon -->
+              </a>
               <!-- Wishlist Button -->
-              <a class="icon-btn" href="wishlist.html"><i class="fal fa-heart"></i></a>
+              <a class="icon-btn" th:href="@{'/addtowishlist/' + ${menuItem.itemId}}"><i class="fal fa-heart"></i></a>
             </div>
             <!-- Product Meta Information -->
             <div class="product_meta">
@@ -182,111 +178,31 @@
   </div>
 
 </div>
-
 <div class="sidemenu-wrapper d-none d-lg-block">
-  <div class="sidemenu-content">
-    <button class="closeButton sideMenuCls">
-      <i class="far fa-times"></i>
-    </button>
+  <div class="sidemenu-content"><button class="closeButton sideMenuCls"><i class="far fa-times"></i></button>
     <div class="widget woocommerce widget_shopping_cart">
       <h3 class="widget_title">Shopping cart</h3>
       <div class="widget_shopping_cart_content">
         <ul class="woocommerce-mini-cart cart_list product_list_widget">
-          <li class="woocommerce-mini-cart-item mini_cart_item">
-            <a href="#" class="remove remove_from_cart_button"
-            ><i class="far fa-times"></i
-            ></a>
-            <a href="#"
-            ><img
-                    src="/assets/img/menu/menu_thumb_1_1.png"
-                    alt="Cart Image"
-            />Daria Shevtsova</a
-            >
-            <span class="quantity"
-            >1 ×
-         <span class="woocommerce-Price-amount amount"
-         ><span class="woocommerce-Price-currencySymbol">$</span>40.00</span
-         ></span
-            >
-          </li>
-          <li class="woocommerce-mini-cart-item mini_cart_item">
-            <a href="#" class="remove remove_from_cart_button"
-            ><i class="far fa-times"></i
-            ></a>
-            <a href="#"
-            ><img
-                    src="/assets/img/menu/menu_thumb_1_2.png"
-                    alt="Cart Image"
-            />Chicken Masala</a
-            >
-            <span class="quantity"
-            >1 ×
-         <span class="woocommerce-Price-amount amount"
-         ><span class="woocommerce-Price-currencySymbol">$</span>99.00</span
-         ></span
-            >
-          </li>
-          <li class="woocommerce-mini-cart-item mini_cart_item">
-            <a href="#" class="remove remove_from_cart_button"
-            ><i class="far fa-times"></i
-            ></a>
-            <a href="#"
-            ><img
-                    src="/assets/img/menu/menu_thumb_1_3.png"
-                    alt="Cart Image"
-            />Sicilian Pizza</a
-            >
-            <span class="quantity"
-            >1 ×
-         <span class="woocommerce-Price-amount amount"
-         ><span class="woocommerce-Price-currencySymbol">$</span>56.00</span
-         ></span
-            >
-          </li>
-          <li class="woocommerce-mini-cart-item mini_cart_item">
-            <a href="#" class="remove remove_from_cart_button"
-            ><i class="far fa-times"></i
-            ></a>
-            <a href="#"
-            ><img
-                    src="/assets/img/menu/menu_thumb_1_4.png"
-                    alt="Cart Image"
-            />Beef Masala</a
-            >
-            <span class="quantity"
-            >1 ×
-         <span class="woocommerce-Price-amount amount"
-         ><span class="woocommerce-Price-currencySymbol">$</span>23.00</span
-         ></span
-            >
-          </li>
-          <li class="woocommerce-mini-cart-item mini_cart_item">
-            <a href="#" class="remove remove_from_cart_button"
-            ><i class="far fa-times"></i
-            ></a>
-            <a href="#"
-            ><img
-                    src="/assets/img/menu/menu_thumb_1_5.png"
-                    alt="Cart Image"
-            />Martin Widenka</a
-            >
-            <span class="quantity"
-            >1 ×
-         <span class="woocommerce-Price-amount amount"
-         ><span class="woocommerce-Price-currencySymbol">$</span>100.00</span
-         ></span
-            >
-          </li>
+          <!-- Iterate over cartItems and display each item -->
+          <th th:each="cartItem : ${cartitems}">
+            <li class="woocommerce-mini-cart-item mini_cart_item">
+              <a href="#" class="remove remove_from_cart_button" th:href="@{'/shop/removeitem/' + ${cartItem.cartItemId}}"><i class="far fa-times"></i></a>
+              <a href="#"><img th:src="${cartItem.menuItem.url}" alt="Cart Image" /> <span th:text="${cartItem.menuItem.name}"></span></a>
+              <span class="quantity" th:text="${cartItem.quantity} + ' × ' + ${#numbers.formatDecimal(cartItem.price, 2, 'COMMA', 2, 'POINT')}"></span>
+            </li>
+          </th>
+          <!-- End iteration -->
+
+          <!-- Total amount and buttons -->
+          <p class="woocommerce-mini-cart__total total">
+            <strong>Subtotal:</strong>
+            <span th:text="${totalcart}"></span>
+          </p>
         </ul>
-        <p class="woocommerce-mini-cart__total total">
-          <strong>Subtotal:</strong>
-          <span class="woocommerce-Price-amount amount"
-          ><span class="woocommerce-Price-currencySymbol">$</span>318.00</span
-          >
-        </p>
         <p class="woocommerce-mini-cart__buttons buttons">
-          <a href="cart.html" class="as-btn wc-forward">View cart</a>
-          <a href="checkout.html" class="as-btn checkout wc-forward">Checkout</a>
+          <a th:href="@{/cart}" class="as-btn wc-forward">View cart</a>
+          <a th:href="@{/checkout}" class="as-btn checkout wc-forward">Checkout</a>
         </p>
       </div>
     </div>
@@ -419,8 +335,26 @@
                     ></a>
                   </div>
                 </li>
-                <li>
-                  <a href="contact.html"><i class="far fa-user"></i> Login/Register</a>
+                <!-- Check if the user is authenticated -->
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                  <a href="#" th:text="${#authentication.name}">
+                    <i class="far fa-user"></i> <span th:text="${#authentication.name}"></span>
+                  </a>
+                </li>
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                  <form id="logoutForm" th:action="@{/logout}" method="post">
+                    <button type="submit" style="background-color: #c62828; color: white; padding: 10px 20px; border: none; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s ease;"
+                            onmouseover="this.style.backgroundColor='#b71c1c'"
+                            onmouseout="this.style.backgroundColor='#c62828'">
+                      Logout
+                    </button>
+                  </form>
+                </li>
+                <!-- If not authenticated, show login/register link -->
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                  <a href="contact.html">
+                    <i class="far fa-user"></i> Login/Register
+                  </a>
                 </li>
               </ul>
             </div>
@@ -445,18 +379,18 @@
                   <a th:href="@{/index}">Home</a>
                   <ul class="sub-menu">
                     <li><a th:href="@{/index}">Restaurant Home</a></li>
-                    <li><a href="index-3.html">Fast Food Home</a></li>
+                    <li><a th:href="@{/index3}">Fast Food Home</a></li>
                     <li>
-                      <a href="index-4.html">Pizza & Burger Light Home</a>
+                      <a th:href="@{/index4}">Pizza & Burger Light Home</a>
                     </li>
                     <li>
-                      <a href="index-5.html">Pizza & Burger Dark Home</a>
+                      <a th:href="@{/iindex5}">Pizza & Burger Dark Home</a>
                     </li>
                   </ul>
                 </li>
                 <li><a th:href="@{/about}">About Us</a></li>
                 <li class="menu-item-has-children">
-                  <a th:href="@{/fast}"href="#">Menu</a>
+                  <a th:href="@{/fast}">Menu</a>
                   <ul class="sub-menu">
                     <li><a th:href="@{/fast}">Fast Food Menu</a></li>
                     <li>
@@ -472,9 +406,9 @@
                   </ul>
                 </li>
                 <li class="menu-item-has-children">
-                  <a href="#">Blog</a>
+                  <a th:href="@{/blog}">Blog</a>
                   <ul class="sub-menu">
-                    <li><a href="blog.html">Blog</a></li>
+                    <li><a th:href="@{/blog}">Blog</a></li>
                     <li><a href="blog-details.html">Blog Details</a></li>
                   </ul>
                 </li>
@@ -494,9 +428,9 @@
             </button>
             <button type="button" class="icon-btn sideMenuToggler">
               <i class="far fa-cart-shopping"></i>
-              <span class="badge">5</span>
+              <span class="badge" th:text="${totalCartItems}"></span>
             </button>
-            <a href="contact.html" class="as-btn">BOOK YOUR SEAT</a>
+            <a th:href="@{/reservation}" class="as-btn">BOOK YOUR SEAT</a>
             <div class="link-box">
               <div class="link-box_icon">
                 <i class="fa-light fa-phone"></i>
@@ -579,8 +513,9 @@
             <div class="actions">
               <!-- Insérer les actions de l'élément de menu (static) -->
               <a th:href="'#QuickView-' + ${menuItem.itemId}" class="icon-btn popup-content"><i class="fal fa-eye"></i></a>
-              <a href="cart.html" class="icon-btn"><i class="fal fa-cart-plus"></i></a>
-              <a href="wishlist.html" class="icon-btn"><i class="fal fa-heart"></i></a>
+              <!-- Adjust the link to include the item ID as a path variable -->
+              <a th:href="@{'/addtocart/' + ${menuItem.itemId}}" class="icon-btn"><i class="fal fa-cart-plus"></i></a>
+              <a th:href="@{'/addtowishlist/' + ${menuItem.itemId}}" class="icon-btn"><i class="fal fa-heart"></i></a>
             </div>
           </div>
         </div>

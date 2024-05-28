@@ -1,11 +1,7 @@
 package food.ma.foodstore.service.services;
 
-import food.ma.foodstore.dao.entities.MenuItem;
-import food.ma.foodstore.dao.entities.Wishlist;
-import food.ma.foodstore.dao.entities.WishlistItem;
-import food.ma.foodstore.dao.repositories.MenuItemRepository;
-import food.ma.foodstore.dao.repositories.WishlistItemRepository;
-import food.ma.foodstore.dao.repositories.WishlistRepository;
+import food.ma.foodstore.dao.entities.*;
+import food.ma.foodstore.dao.repositories.*;
 import food.ma.foodstore.service.managers.WishlistManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +12,8 @@ import java.util.List;
 @Service
 public class WishlistService implements WishlistManager {
 
+    @Autowired
+    private CustomerRepository customerRepository;
     private final WishlistRepository wishlistRepository;
     private final WishlistItemRepository wishlistItemRepository;
     private final MenuItemRepository menuItemRepository;
@@ -39,19 +37,44 @@ public class WishlistService implements WishlistManager {
             return List.of();
         }
     }
+
     @Override
-    public void addItemToWishlist(Long wishlistId, Long itemId) {
+    public Wishlist findOrCreateWishListByCustomerId(Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
 
-        Wishlist wishlist = wishlistRepository.findById(wishlistId)
-                .orElseThrow(() -> new EntityNotFoundException("Wishlist not found"));
+        Wishlist wishlist = wishlistRepository.findByCustomerCustomerId(customerId);
+        if (wishlist == null) {
+            wishlist = new Wishlist();
+            wishlist.setCustomer(customer);
+            wishlist = wishlistRepository.save(wishlist); // Save the new wishlist to the database
+        }
+        return wishlist;
+    }
 
-        MenuItem menuItem = menuItemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("Menu item not found"));
+    @Override
+    public WishlistItem createWishListItem(Wishlist wishlist, MenuItem menuItem) {
+        WishlistItem cartItem = new WishlistItem();
+        cartItem.setWishlist(wishlist);
+        cartItem.setMenuItem(menuItem);
+        return cartItem;
+    }
 
-        WishlistItem wishlistItem = new WishlistItem();
-        wishlistItem.setWishlist(wishlist);
-        wishlistItem.setMenuItem(menuItem);
+    @Override
+    public void addItemToWishList(Long customerId,Long menuItemId) {
+        // Find or create the cart for the customer by their ID
+        Wishlist wishlist = findOrCreateWishListByCustomerId(customerId);
 
+        // Fetch the menu item; assume the menu item exists
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new RuntimeException("Menu item not found"));
+
+        // Create and save the cart item
+        WishlistItem wishlistItem = createWishListItem(wishlist, menuItem);
+
+        // Add the new cart item to the cart's list of items
+        wishlist.getWishlistItems().add(wishlistItem);
+
+        // Save the new cart item to the database
         wishlistItemRepository.save(wishlistItem);
     }
 

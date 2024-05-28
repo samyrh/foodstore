@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "Reservation")
@@ -17,10 +18,9 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
-    private LocalDateTime reservationDateTime;
+    private Date reservationDateTime;
     private Integer numberOfGuests;
-    private String status;
-
+    private String description;
     @ManyToOne
     @JoinColumn(name = "customerId")
     private Customer customer;

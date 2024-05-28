@@ -1,10 +1,10 @@
 <!doctype html>
 <html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
-<!-- Mirrored from angfuzsoft.com/html/pizzer/demo/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 05 Feb 2023 15:02:26 GMT -->
+<!-- Mirrored from angfuzsoft.com/html/pizzer/demo/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 05 Feb 2023 15:02:24 GMT -->
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>Pizzer - Fast Food & Restaurant HTML Template - Checkout</title>
+  <title>Pizzer - Fast Food & Restaurant HTML Template - Wishlist</title>
   <meta name="author" content="Angfuzsoft" />
   <meta
           name="description"
@@ -92,7 +92,7 @@
   <meta name="msapplication-TileColor" content="#ffffff" />
   <meta
           name="msapplication-TileImage"
-          content="assets/img/favicons/ms-icon-144x144.png"
+          content="/assets/img/favicons/ms-icon-144x144.png"
   />
   <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://fonts.googleapis.com/" />
@@ -117,9 +117,9 @@
       <div class="widget_shopping_cart_content">
         <ul class="woocommerce-mini-cart cart_list product_list_widget">
           <!-- Iterate over cartItems and display each item -->
-          <th th:each="cartItem : ${cartitems}">
+          <th th:each="cartItem : ${cartItems}">
             <li class="woocommerce-mini-cart-item mini_cart_item">
-              <a href="#" class="remove remove_from_cart_button" th:href="@{'/checkout/removeitem/' + ${cartItem.cartItemId}}"><i class="far fa-times"></i></a>
+              <a href="#" class="remove remove_from_cart_button" th:href="@{'/wishlist/removeitem/' + ${cartItem.cartItemId}}"><i class="far fa-times"></i></a>
               <a href="#"><img th:src="${cartItem.menuItem.url}" alt="Cart Image" /> <span th:text="${cartItem.menuItem.name}"></span></a>
               <span class="quantity" th:text="${cartItem.quantity} + ' × ' + ${#numbers.formatDecimal(cartItem.price, 2, 'COMMA', 2, 'POINT')}"></span>
             </li>
@@ -170,7 +170,7 @@
         <li class="menu-item-has-children">
           <a href="#">Menu</a>
           <ul class="sub-menu">
-            <li><a href="menufast.html">Fast Food Menu</a></li>
+            <li><a href="menu-fast.html">Fast Food Menu</a></li>
             <li><a href="menu-rest.html">Restaurant Food Menu</a></li>
           </ul>
         </li>
@@ -178,7 +178,7 @@
           <a href="#">Shop</a>
           <ul class="sub-menu">
             <li><a href="shop.html">Shop</a></li>
-            <li><a href="shopdetails.html">Shop Details</a></li>
+            <li><a href="shop-details.html">Shop Details</a></li>
           </ul>
         </li>
         <li class="menu-item-has-children mega-menu-wrap">
@@ -197,7 +197,7 @@
             <li>
               <a href="#">Pagelist 2</a>
               <ul>
-                <li><a href="menufast.html">Fast Food Menu</a></li>
+                <li><a href="menu-fast.html">Fast Food Menu</a></li>
                 <li><a href="menu-rest.html">Restaurant Food Menu</a></li>
                 <li><a href="team.html">Our Chef</a></li>
                 <li><a href="team-details.html">Chef Details</a></li>
@@ -208,7 +208,7 @@
               <a href="#">Pagelist 3</a>
               <ul>
                 <li><a href="shop.html">Shop</a></li>
-                <li><a href="shopdetails.html">Shop Details</a></li>
+                <li><a href="shop-details.html">Shop Details</a></li>
                 <li><a href="cart.html">Cart Page</a></li>
                 <li><a href="checkout.html">Checkout</a></li>
                 <li><a href="wishlist.html">Wishlist</a></li>
@@ -269,26 +269,10 @@
                     ></a>
                   </div>
                 </li>
-                <!-- Check if the user is authenticated -->
-                <li th:if="${#authorization.expression('isAuthenticated()')}">
-                  <a href="#" th:text="${#authentication.name}">
-                    <i class="far fa-user"></i> <span th:text="${#authentication.name}"></span>
-                  </a>
-                </li>
-                <li th:if="${#authorization.expression('isAuthenticated()')}">
-                  <form id="logoutForm" th:action="@{/logout}" method="post">
-                    <button type="submit" style="background-color: #c62828; color: white; padding: 10px 20px; border: none; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s ease;"
-                            onmouseover="this.style.backgroundColor='#b71c1c'"
-                            onmouseout="this.style.backgroundColor='#c62828'">
-                      Logout
-                    </button>
-                  </form>
-                </li>
-                <!-- If not authenticated, show login/register link -->
-                <li th:unless="${#authorization.expression('isAuthenticated()')}">
-                  <a href="contact.html">
-                    <i class="far fa-user"></i> Login/Register
-                  </a>
+                <li>
+                  <a href="contact.html"
+                  ><i class="far fa-user"></i> Login/Register</a
+                  >
                 </li>
               </ul>
             </div>
@@ -310,44 +294,96 @@
             <nav class="main-menu d-none d-lg-inline-block">
               <ul>
                 <li class="menu-item-has-children">
-                  <a th:href="@{/index}">Home</a>
+                  <a href="index-2.html">Home</a>
                   <ul class="sub-menu">
-                    <li><a th:href="@{/index2}">Restaurant Home</a></li>
-                    <li><a th:href="@{/index3}">Fast Food Home</a></li>
+                    <li><a href="index-2.html">Restaurant Home</a></li>
+                    <li><a href="index-3.html">Fast Food Home</a></li>
                     <li>
-                      <a th:href="@{/index4}">Pizza & Burger Light Home</a>
+                      <a href="index-4.html">Pizza & Burger Light Home</a>
                     </li>
                     <li>
-                      <a th:href="@{/index5}">Pizza & Burger Dark Home</a>
-                    </li>
-                  </ul>
-                </li>
-                <li><a th:href="@{/about}">About Us</a></li>
-                <li class="menu-item-has-children">
-                  <a th:href="@{/fast}">Menu</a>
-                  <ul class="sub-menu">
-                    <li><a th:href="@{/fast}">Fast Food Menu</a></li>
-                    <li>
-                      <a th:href="@{/restaurant}">Restaurant Food Menu</a>
+                      <a href="index-5.html">Pizza & Burger Dark Home</a>
                     </li>
                   </ul>
                 </li>
+                <li><a href="about.html">About Us</a></li>
                 <li class="menu-item-has-children">
-                  <a th:href="@{/shop}">Shop</a>
+                  <a href="#">Menu</a>
                   <ul class="sub-menu">
-                    <li><a th:href="@{/shop}">Shop</a></li>
-                    <li><a th:href="@{/shopdetails}">Shop Details</a></li>
+                    <li><a href="menu-fast.html">Fast Food Menu</a></li>
+                    <li>
+                      <a href="menu-rest.html">Restaurant Food Menu</a>
+                    </li>
                   </ul>
                 </li>
                 <li class="menu-item-has-children">
-                  <a th:href="@{/blog}">Blog</a>
+                  <a href="#">Shop</a>
                   <ul class="sub-menu">
-                    <li><a th:href="@{/blog}">Blog</a></li>
-                    <li><a th:href="@{/blogdetails}">Blog Details</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="shop-details.html">Shop Details</a></li>
                   </ul>
                 </li>
-                <li><a th:href="@{/contact}">Contact Us</a></li>
-                <li><a th:href="@{/reservation}">Reservation</a></li>
+                <li class="menu-item-has-children mega-menu-wrap">
+                  <a href="#">Pages</a>
+                  <ul class="mega-menu">
+                    <li>
+                      <a href="shop.html">Pagelist 1</a>
+                      <ul>
+                        <li><a href="index-2.html">Home One</a></li>
+                        <li><a href="index-3.html">Home Two</a></li>
+                        <li><a href="index-4.html">Home Three</a></li>
+                        <li><a href="index-5.html">Home Four</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#">Pagelist 2</a>
+                      <ul>
+                        <li><a href="menu-fast.html">Fast Food Menu</a></li>
+                        <li>
+                          <a href="menu-rest.html">Restaurant Food Menu</a>
+                        </li>
+                        <li><a href="team.html">Our Chef</a></li>
+                        <li>
+                          <a href="team-details.html">Chef Details</a>
+                        </li>
+                        <li><a href="faq.html">Faq Page</a></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#">Pagelist 3</a>
+                      <ul>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li>
+                          <a href="shop-details.html">Shop Details</a>
+                        </li>
+                        <li><a href="cart.html">Cart Page</a></li>
+                        <li><a href="checkout.html">Checkout</a></li>
+                        <li><a href="wishlist.html">Wishlist</a></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <a href="#">Pagelist 4</a>
+                      <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li>
+                          <a href="blog-details.html">Blog Details</a>
+                        </li>
+                        <li><a href="testimonial.html">Testimonial</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="error.html">Error Page</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li class="menu-item-has-children">
+                  <a href="#">Blog</a>
+                  <ul class="sub-menu">
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="blog-details.html">Blog Details</a></li>
+                  </ul>
+                </li>
+                <li><a href="contact.html">Contact Us</a></li>
               </ul>
             </nav>
             <button
@@ -365,9 +401,9 @@
             </button>
             <button type="button" class="icon-btn sideMenuToggler">
               <i class="far fa-cart-shopping"></i>
-              <span class="badge">5</span>
+              <span class="badge" th:text="${totalCartItems}"></span>
             </button>
-            <a th:href="@{/reservation}" class="as-btn">BOOK YOUR SEAT</a>
+            <a href="contact.html" class="as-btn">BOOK YOUR SEAT</a>
             <div class="link-box">
               <div class="link-box_icon">
                 <i class="fa-light fa-phone"></i>
@@ -392,269 +428,62 @@
   <div class="container z-index-common">
     <div class="breadcumb-content">
       <h1 class="breadcumb-title">
-        Check<span class="font-style text-theme2">out</span>
+        Wish<span class="font-style text-theme2">list</span>
       </h1>
       <ul class="breadcumb-menu">
         <li><a href="index-2.html">Home</a></li>
-        <li>Checkout</li>
+        <li>Wishlist</li>
       </ul>
     </div>
   </div>
 </div>
-<div class="as-checkout-wrapper space-top space-extra-bottom">
+<div class="as-cart-wrapper space-top space-extra-bottom">
   <div class="container">
-    <div class="woocommerce-form-login-toggle">
-      <div class="woocommerce-info">
-        Returning customer?
-        <a href="#" class="showlogin">Click here to login</a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <form action="#" class="woocommerce-form-login mb-30">
-          <div class="form-group">
-            <label>Username or email *</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Username or email"
-            />
-          </div>
-          <div class="form-group">
-            <label>Password *</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Password"
-            />
-          </div>
-          <div class="form-group">
-            <div class="custom-checkbox">
-              <input type="checkbox" id="remembermylogin" />
-              <label for="remembermylogin">Remember Me</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="as-btn">Login</button>
-            <p class="fs-xs mt-2 mb-0">
-              <a class="text-reset" href="#">Lost your password?</a>
-            </p>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div class="woocommerce-form-coupon-toggle">
-      <div class="woocommerce-info">
-        Have a coupon?
-        <a href="#" class="showcoupon">Click here to enter your code</a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <form action="#" class="woocommerce-form-coupon">
-          <div class="form-group">
-            <label>Coupon code</label>
-            <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Write your coupon code"
-            />
-          </div>
-          <div class="form-group">
-            <button type="submit" class="as-btn">Apply coupon</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <form action="#" class="woocommerce-checkout mt-40">
-      <div class="row">
-        <div class="col-lg-6">
-          <h2 class="h4">Billing Details</h2>
-          <div class="row">
-            <div class="col-md-6 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Username"
-                      name="username"
-              />
-            </div>
-            <div class="col-md-6 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Address"
-                      name="address"
-              />
-            </div>
-            <div class="col-12 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Email"
-                      name="email"
-              />
-            </div>
-            <div class="col-12 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Phone Number"
-                      name="phoneNumber"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-    <h4 class="mt-4 pt-lg-2">Your Order</h4>
-    <form action="#" class="woocommerce-cart-form">
-      <table class="cart_table mb-20">
+    <div class="woocommerce-notices-wrapper"><div class="woocommerce-message">Shipping costs updated.</div></div>
+    <form  class="woocommerce-cart-form">
+      <table class="cart_table">
         <thead>
         <tr>
           <th class="cart-col-image">Image</th>
           <th class="cart-col-productname">Product Name</th>
+          <th class="cart-col-details">Product Details</th>
           <th class="cart-col-price">Price</th>
-          <th class="cart-col-quantity">Quantity</th>
-          <th class="cart-col-total">Total</th>
+          <th class="cart-col-remove">Add To Cart</th>
+          <th class="cart-col-remove">Remove Item</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="cart_item">
+        <tr class="cart_item" th:each="wishlisttItem, itemIndex  : ${wishlistItems}">
           <td data-title="Product">
-            <a class="cart-productimage" href="shopdetails.html"
-            ><img
-                    width="91"
-                    height="91"
-                    src="/assets/img/menu/menu_thumb_1_1.png"
-                    alt="Image"
-            /></a>
+            <a class="cart-productimage">
+              <img th:src="${wishlisttItem.menuItem.url}" alt="Product Image" width="91" height="91" />
+            </a>
           </td>
-          <td data-title="Name">
-            <a class="cart-productname" href="shopdetails.html"
-            >Chicken Vagetable</a
-            >
-          </td>
+          <td data-title="Name"><a class="cart-productname" th:text="${wishlisttItem.menuItem.name}"></a></td>
+          <td data-title="details"><a class="cart-productdetails" th:text="${wishlisttItem.menuItem.description}"></a></td>
           <td data-title="Price">
-                  <span class="amount"
-                  ><bdi><span>$</span>18</bdi></span
-                  >
+            <bdi><span>$</span><span th:text="${wishlisttItem.menuItem.price}"></span></bdi>
           </td>
-          <td data-title="Quantity">
-            <strong class="product-quantity">01</strong>
+          <td data-title="Add to Cart">
+            <a class="add-to-cart btn btn-success" th:href="@{'/wishlist/addtocart/' + ${wishlisttItem.menuItem.itemId}}" title="Add to Cart">
+              <i class="fal fa-shopping-cart"></i>
+            </a>
           </td>
-          <td data-title="Total">
-                  <span class="amount"
-                  ><bdi><span>$</span>18</bdi></span
-                  >
+          <td data-title="Remove Item">
+            <a class="remove-from-wishlist" th:href="@{'/wishlist/remove/' + ${wishlisttItem.wishlistItemId}}" title="Remove from Wishlist">
+              <i class="fal fa-trash-alt"></i>
+            </a>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="6" class="actions">
+            <a th:href="@{/shop}" class="as-btn">Continue Shopping</a>
           </td>
         </tr>
         </tbody>
-        <tfoot class="checkout-ordertable">
-        <tr class="cart-subtotal">
-          <th>Subtotal</th>
-          <td data-title="Subtotal" colspan="4">
-                  <span class="woocommerce-Price-amount amount"
-                  ><bdi
-                  ><span class="woocommerce-Price-currencySymbol">$</span
-                  >281.05</bdi
-                  ></span
-                  >
-          </td>
-        </tr>
-        <tr class="woocommerce-shipping-totals shipping">
-          <th>Shipping</th>
-          <td data-title="Shipping" colspan="4">
-            Enter your address to view shipping options.
-          </td>
-        </tr>
-        <tr class="order-total">
-          <th>Total</th>
-          <td data-title="Total" colspan="4">
-            <strong
-            ><span class="woocommerce-Price-amount amount"
-            ><bdi
-            ><span class="woocommerce-Price-currencySymbol">$</span
-            >281.05</bdi
-            ></span
-            ></strong
-            >
-          </td>
-        </tr>
-        </tfoot>
       </table>
     </form>
-    <div class="mt-lg-3 mb-30">
-      <div class="woocommerce-checkout-payment">
-        <ul class="wc_payment_methods payment_methods methods">
-          <li class="wc_payment_method payment_method_bacs">
-            <input
-                    id="payment_method_bacs"
-                    type="radio"
-                    class="input-radio"
-                    name="payment_method"
-                    value="bacs"
-                    checked="checked"
-            />
-            <label for="payment_method_bacs">Direct bank transfer</label>
-            <div class="payment_box payment_method_bacs">
-              <p>
-                Make your payment directly into our bank account. Please use
-                your Order ID as the payment reference. Your order will not
-                be shipped until the funds have cleared in our account.
-              </p>
-            </div>
-          </li>
-          <li class="wc_payment_method payment_method_cheque">
-            <input
-                    id="payment_method_cheque"
-                    type="radio"
-                    class="input-radio"
-                    name="payment_method"
-                    value="cheque"
-            />
-            <label for="payment_method_cheque">Cheque Payment</label>
-            <div class="payment_box payment_method_cheque">
-              <p>
-                Please send a check to Store Name, Store Street, Store Town,
-                Store State / County, Store Postcode.
-              </p>
-            </div>
-          </li>
-          <li class="wc_payment_method payment_method_cod">
-            <input
-                    id="payment_method_cod"
-                    type="radio"
-                    class="input-radio"
-                    name="payment_method"
-            />
-            <label for="payment_method_cod">Credit Cart</label>
-            <div class="payment_box payment_method_cod">
-              <p>Pay with cash upon delivery.</p>
-            </div>
-          </li>
-          <li class="wc_payment_method payment_method_paypal">
-            <input
-                    id="payment_method_paypal"
-                    type="radio"
-                    class="input-radio"
-                    name="payment_method"
-                    value="paypal"
-            />
-            <label for="payment_method_paypal">Paypal</label>
-            <div class="payment_box payment_method_paypal">
-              <p>
-                Pay via PayPal; you can pay with your credit card if you
-                don’t have a PayPal account.
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div class="form-row place-order">
-          <button type="submit" class="as-btn">Place order</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 <footer
@@ -728,7 +557,7 @@
             <div class="menu-all-pages-container">
               <ul class="menu">
                 <li><a href="about.html">About Us</a></li>
-                <li><a href="menufast.html">Menu</a></li>
+                <li><a href="menu-fast.html">Menu</a></li>
                 <li><a href="project.html">Testimonial</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
@@ -741,11 +570,11 @@
             <h3 class="widget_title">Our Menu</h3>
             <div class="menu-all-pages-container">
               <ul class="menu">
-                <li><a href="menufast.html">Burgers</a></li>
-                <li><a href="menufast.html">Desserts</a></li>
-                <li><a href="menufast.html">Pizza</a></li>
-                <li><a href="menufast.html">Pasta</a></li>
-                <li><a href="menufast.html">Indian Kabab</a></li>
+                <li><a href="menu-fast.html">Burgers</a></li>
+                <li><a href="menu-fast.html">Desserts</a></li>
+                <li><a href="menu-fast.html">Pizza</a></li>
+                <li><a href="menu-fast.html">Pasta</a></li>
+                <li><a href="menu-fast.html">Indian Kabab</a></li>
               </ul>
             </div>
           </div>
@@ -825,5 +654,5 @@
 <script src="/assets/js/app.min.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
-<!-- Mirrored from angfuzsoft.com/html/pizzer/demo/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 05 Feb 2023 15:02:26 GMT -->
+<!-- Mirrored from angfuzsoft.com/html/pizzer/demo/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 05 Feb 2023 15:02:24 GMT -->
 </html>

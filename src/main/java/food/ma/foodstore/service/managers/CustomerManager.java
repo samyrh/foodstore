@@ -11,4 +11,5 @@ public interface CustomerManager {
     Customer updateCustomer(Customer customer);
     void deleteCustomer(Long customerId);
     List<Customer> getAllCustomers();
+
 }

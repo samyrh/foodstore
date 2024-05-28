@@ -528,10 +528,26 @@
                                         ></a>
                                     </div>
                                 </li>
-                                <li>
-                                    <a href="contact.html"
-                                    ><i class="far fa-user"></i> Login/Register</a
-                                    >
+                                <!-- Check if the user is authenticated -->
+                                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                                    <a href="#" th:text="${#authentication.name}">
+                                        <i class="far fa-user"></i> <span th:text="${#authentication.name}"></span>
+                                    </a>
+                                </li>
+                                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                                    <form id="logoutForm" th:action="@{/logout}" method="post">
+                                        <button type="submit" style="background-color: #c62828; color: white; padding: 10px 20px; border: none; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#b71c1c'"
+                                                onmouseout="this.style.backgroundColor='#c62828'">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </li>
+                                <!-- If not authenticated, show login/register link -->
+                                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                                    <a href="contact.html">
+                                        <i class="far fa-user"></i> Login/Register
+                                    </a>
                                 </li>
                             </ul>
                         </div>

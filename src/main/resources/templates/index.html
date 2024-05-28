@@ -47,42 +47,31 @@
       <h3 class="widget_title">Shopping cart</h3>
       <div class="widget_shopping_cart_content">
         <ul class="woocommerce-mini-cart cart_list product_list_widget">
-          <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#" class="remove remove_from_cart_button"><i
-                  class="far fa-times"></i></a> <a href="#"><img src="/assets/img/menu/menu_thumb_1_1.png"
-                                                                 alt="Cart Image">Daria Shevtsova</a> <span class="quantity">1 × <span
-                  class="woocommerce-Price-amount amount"><span
-                  class="woocommerce-Price-currencySymbol">$</span>40.00</span></span></li>
-          <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#" class="remove remove_from_cart_button"><i
-                  class="far fa-times"></i></a> <a href="#"><img src="/assets/img/menu/menu_thumb_1_2.png"
-                                                                 alt="Cart Image">Chicken Masala</a> <span class="quantity">1 × <span
-                  class="woocommerce-Price-amount amount"><span
-                  class="woocommerce-Price-currencySymbol">$</span>99.00</span></span></li>
-          <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#" class="remove remove_from_cart_button"><i
-                  class="far fa-times"></i></a> <a href="#"><img src="/assets/img/menu/menu_thumb_1_3.png"
-                                                                 alt="Cart Image">Sicilian Pizza</a> <span class="quantity">1 × <span
-                  class="woocommerce-Price-amount amount"><span
-                  class="woocommerce-Price-currencySymbol">$</span>56.00</span></span></li>
-          <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#" class="remove remove_from_cart_button"><i
-                  class="far fa-times"></i></a> <a href="#"><img src="/assets/img/menu/menu_thumb_1_4.png"
-                                                                 alt="Cart Image">Beef Masala</a> <span class="quantity">1 × <span
-                  class="woocommerce-Price-amount amount"><span
-                  class="woocommerce-Price-currencySymbol">$</span>23.00</span></span></li>
-          <li class="woocommerce-mini-cart-item mini_cart_item"><a href="#" class="remove remove_from_cart_button"><i
-                  class="far fa-times"></i></a> <a href="#"><img src="/assets/img/menu/menu_thumb_1_5.png"
-                                                                 alt="Cart Image">Martin Widenka</a> <span class="quantity">1 × <span
-                  class="woocommerce-Price-amount amount"><span
-                  class="woocommerce-Price-currencySymbol">$</span>100.00</span></span></li>
+          <!-- Iterate over cartItems and display each item -->
+          <th th:each="cartItem : ${cartitems}">
+            <li class="woocommerce-mini-cart-item mini_cart_item">
+              <a href="#" class="remove remove_from_cart_button" th:href="@{'/index/removeitem/' + ${cartItem.cartItemId}}"><i class="far fa-times"></i></a>
+              <a href="#"><img th:src="${cartItem.menuItem.url}" alt="Cart Image" /> <span th:text="${cartItem.menuItem.name}"></span></a>
+              <span class="quantity" th:text="${cartItem.quantity} + ' × ' + ${#numbers.formatDecimal(cartItem.price, 2, 'COMMA', 2, 'POINT')}"></span>
+            </li>
+          </th>
+          <!-- End iteration -->
+
+          <!-- Total amount and buttons -->
+          <p class="woocommerce-mini-cart__total total">
+            <strong>Subtotal:</strong>
+            <span th:text="${totalcart}"></span>
+          </p>
         </ul>
-        <p class="woocommerce-mini-cart__total total"><strong>Subtotal:</strong> <span
-                class="woocommerce-Price-amount amount"><span
-                class="woocommerce-Price-currencySymbol">$</span>318.00</span></p>
-        <p class="woocommerce-mini-cart__buttons buttons"><a href="cart.html" class="as-btn wc-forward">View cart</a>
-          <a href="checkout.html" class="as-btn checkout wc-forward">Checkout</a>
+        <p class="woocommerce-mini-cart__buttons buttons">
+          <a th:href="@{/cart}" class="as-btn wc-forward">View cart</a>
+          <a th:href="@{/checkout}" class="as-btn checkout wc-forward">Checkout</a>
         </p>
       </div>
     </div>
   </div>
 </div>
+
 <div class="popup-search-box d-none d-lg-block"><button class="searchClose"><i class="fal fa-times"></i></button>
   <form action="#"><input type="text" placeholder="What are you looking for?"> <button type="submit"><i
           class="fal fa-search"></i></button></form>
@@ -182,7 +171,27 @@
                             href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
                   </div>
                 </li>
-                <li><a href="contact.html"><i class="far fa-user"></i> Login/Register</a></li>
+                <!-- Check if the user is authenticated -->
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                  <a href="#" th:text="${#authentication.name}">
+                    <i class="far fa-user"></i> <span th:text="${#authentication.name}"></span>
+                  </a>
+                </li>
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                  <form id="logoutForm" th:action="@{/logout}" method="post">
+                    <button type="submit" style="background-color: #c62828; color: white; padding: 10px 20px; border: none; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s ease;"
+                            onmouseover="this.style.backgroundColor='#b71c1c'"
+                            onmouseout="this.style.backgroundColor='#c62828'">
+                      Logout
+                    </button>
+                  </form>
+                </li>
+                <!-- If not authenticated, show login/register link -->
+                <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                  <a th:href="@{/login}">
+                    <i class="far fa-user"></i> Login/Register
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -233,10 +242,16 @@
           </div>
         </div>
         <div class="col-auto d-none d-xl-block">
-          <div class="header-button"><button type="button" class="icon-btn searchBoxToggler"><i
-                  class="far fa-search"></i></button> <button type="button" class="icon-btn sideMenuToggler"><i
-                  class="far fa-cart-shopping"></i> <span class="badge">5</span></button> <a href="contact.html"
-                                                                                             class="as-btn">BOOK YOUR SEAT</a>
+          <div class="header-button">
+            <button type="button" class="icon-btn searchBoxToggler">
+              <i class="far fa-search"></i>
+            </button>
+            <button type="button" class="icon-btn sideMenuToggler">
+              <i class="far fa-cart-shopping"></i>
+              <span class="badge badge-pill badge-danger" th:text="${totalCartItems}"></span>
+            </button>
+            <a th:href="@{/reservation}"
+               class="as-btn">BOOK YOUR SEAT</a>
             <div class="link-box">
               <div class="link-box_icon"><i class="fa-light fa-phone"></i></div>
               <div>
@@ -285,11 +300,11 @@
                                                                                                                                                                            class="ls-l ls-hide-tablet ls-hide-phone" href="shop.html" target="_self"
                                                                                                                                                                            data-ls="offsetxin:500; delayin:180; easingin:easeOutBack; bgcolorin:transparent; colorin:transparent; offsetxout:-120; durationout:800; startatout:slidechangeonly + ; bgcolorout:transparent; colorout:transparent; hover:true; hoveropacity:1; hoverbgcolor:#ffffff; hovercolor:#ff9d2d; position:fixed;"><ls-layer
               style="font-size:14px; color:#fff; text-align:center; font-family:Rubik; cursor:pointer; width:162px; left:344px; top:510px; text-transform:capitalize; line-height:14px; padding-bottom:20px; padding-top:22px; font-weight:600; border-radius:999px 999px 999px 999px; background-color:#FF9D2D;"
-              class="ls-button-layer">ORDER NOW</ls-layer></a><a style="" class="ls-l ls-hide-tablet ls-hide-phone"
+              class="ls-button-layer" th:href="@{/shop}">ORDER NOW</ls-layer></a><a style="" class="ls-l ls-hide-tablet ls-hide-phone"
                                                                  href="menufast.html" target="_self"
                                                                  data-ls="offsetxin:500; delayin:200; easingin:easeOutBack; bgcolorin:transparent; colorin:transparent; offsetxout:-120; durationout:800; startatout:slidechangeonly + ; bgcolorout:transparent; colorout:transparent; hover:true; hoveropacity:1; hoverbgcolor:#ffffff; hovercolor:#eb0029; position:fixed;"><ls-layer
               style="font-size:14px; color:#fff; text-align:center; font-family:Rubik; cursor:pointer; width:162px; left:530px; top:510px; text-transform:capitalize; line-height:14px; padding-bottom:20px; padding-top:22px; font-weight:600; border-radius:999px 999px 999px 999px; background-color:#EB0029;"
-              class="ls-button-layer">BROWSE MENU</ls-layer></a>
+              class="ls-button-layer" th:href="@{/restaurant}">BROWSE MENU</ls-layer></a>
       <h1
               style="text-align:left; font-style:normal; text-decoration:none; text-transform:none; font-weight:700; letter-spacing:0px; background-position:0% 0%; background-repeat:no-repeat; font-family:Rubik; line-height:80px; top:222px; left:340px; color:#ffffff; font-size:70px; white-space:normal;"
               class="ls-l ls-hide-tablet ls-hide-phone ls-text-layer"
@@ -308,7 +323,7 @@
                                                                       class="ls-l ls-hide-desktop ls-hide-phone" href="shop.html" target="_self"
                                                                       data-ls="offsetxin:500; delayin:180; easingin:easeOutBack; bgcolorin:transparent; colorin:transparent; offsetxout:-120; durationout:800; startatout:slidechangeonly + ; bgcolorout:transparent; colorout:transparent; hover:true; hoveropacity:1; hoverbgcolor:#ffffff; hovercolor:#ff9d2d; position:fixed;"><ls-layer
               style="font-size:32px; color:#fff; text-align:center; font-family:Rubik; cursor:pointer; left:78px; top:549px; text-transform:capitalize; padding-bottom:30px; padding-top:30px; font-weight:600; border-radius:999px 999px 999px 999px; background-color:#FF9D2D; line-height:32px; width:270px;"
-              class="ls-button-layer">ORDER NOW</ls-layer></a><a style="" class="ls-l ls-hide-desktop ls-hide-phone"
+              class="ls-button-layer" th:href="@{/shop}">ORDER NOW</ls-layer></a><a style="" class="ls-l ls-hide-desktop ls-hide-phone"
                                                                  href="menufast.html" target="_self"
                                                                  data-ls="offsetxin:500; delayin:200; easingin:easeOutBack; bgcolorin:transparent; colorin:transparent; offsetxout:-120; durationout:800; startatout:slidechangeonly + ; bgcolorout:transparent; colorout:transparent; hover:true; hoveropacity:1; hoverbgcolor:#ffffff; hovercolor:#eb0029; position:fixed;"><ls-layer
               style="font-size:32px; color:#fff; text-align:center; font-family:Rubik; cursor:pointer; left:378px; top:549px; text-transform:capitalize; padding-bottom:30px; padding-top:30px; font-weight:600; border-radius:999px 999px 999px 999px; line-height:32px; width:310px; background-color:#eb0029;"
@@ -742,7 +757,7 @@
             </ul>
           </div>
         </div>
-        <div class="btn-wrap"><a href="about.html" class="as-btn">DISCOVER MORE</a>
+        <div class="btn-wrap"><a th:href="@{/about}" class="as-btn">DISCOVER MORE</a>
           <div class="profile-box">
             <div class="avater"><img src="/assets/img/normal/about_avater.jpg" alt="avater"></div>
             <div class="content">
@@ -890,15 +905,15 @@
             <div class="actions">
               <!-- Insérer les actions de l'élément de menu (static) -->
               <a th:href="'#QuickView-' + ${menuItem.itemId}" class="icon-btn popup-content"><i class="fal fa-eye"></i></a>
-              <a href="cart.html" class="icon-btn"><i class="fal fa-cart-plus"></i></a>
-              <a href="wishlist.html" class="icon-btn"><i class="fal fa-heart"></i></a>
+              <a th:href="@{'/addtocart/' + ${menuItem.itemId}}" class="icon-btn"><i class="fal fa-cart-plus"></i></a>
+              <a th:href="@{'/addtowishlist/' + ${menuItem.itemId}}" class="icon-btn"><i class="fal fa-heart"></i></a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-center mt-5"><a href="shop.html" class="as-btn">View All Menus</a></div>
+  <div class="text-center mt-5"><a th:href="@{/shop}" class="as-btn">View All Menus</a></div>
   </div>
   <div class="shape-mockup chili jump-reverse" data-top="0%" data-right="0"><img src="/assets/img/shape/red_chili.png"
                                                                                  alt="shape"></div>
@@ -930,7 +945,7 @@
         <h2 class="text-white fw-semibold mt-n2">Delicious Burger & French<br>Fry in Restaurant</h2>
         <p class="text-white mb-4">Progressively simplify effective e-tailers and process-centric methods of
           empowerment. Quickly pontificate parallel.</p>
-        <div class="btn-wrap"><a href="shop.html" class="as-btn style6">Order now</a>
+        <div class="btn-wrap"><a th:href="@{/fast}" class="as-btn style6">Order now</a>
           <h5 class="price_style1">$200 - <del>$340</del></h5>
         </div>
       </div>
@@ -988,7 +1003,7 @@
         <div class="team-card">
           <div class="team-img"><img src="/assets/img/team/team_1_1.jpg" alt="Team"></div>
           <div class="team-content">
-            <h3 class="team-title box-title"><a href="team-details.html">David Latham</a></h3><span
+            <h3 class="team-title box-title"><a th:href="@{/blog}">David Latham</a></h3><span
                   class="team-desig">Chief Executive</span>
             <div class="as-social"><a target="_blank" href="https://facebook.com/"><i
                     class="fab fa-facebook-f"></i></a> <a target="_blank" href="https://twitter.com/"><i
@@ -1174,8 +1189,8 @@
             <div class="blog-meta"><a href="blog.html"><i class="fa-regular fa-user"></i>By Pizzer</a> <a
                     href="blog.html"><i class="fa-light fa-calendar-days"></i>15 July, 2022</a> <a href="blog.html"><i
                     class="fa-regular fa-tag"></i>Chicken</a></div>
-            <h3 class="blog-title"><a href="blog-details.html">10 Reasons To Do A Digital Detox Challenge</a></h3>
-            <div class="blog-bottom"><a href="blog-details.html" class="line-btn">Read More</a> <a
+            <h3 class="blog-title"><a th:href="@{/about}">10 Reasons To Do A Digital Detox Challenge</a></h3>
+            <div class="blog-bottom"><a th:href="@{/blog}" class="line-btn">Read More</a> <a
                     href="blog-details.html" class="comment"><i class="fa-regular fa-comments"></i>3 Comments</a></div>
           </div>
         </div>
@@ -1187,9 +1202,9 @@
             <div class="blog-meta"><a href="blog.html"><i class="fa-regular fa-user"></i>By Pizzer</a> <a
                     href="blog.html"><i class="fa-light fa-calendar-days"></i>16 July, 2022</a> <a href="blog.html"><i
                     class="fa-regular fa-tag"></i>Mutton</a></div>
-            <h3 class="blog-title"><a href="blog-details.html">New Restaurant Town Our Ple Award Contract</a></h3>
-            <div class="blog-bottom"><a href="blog-details.html" class="line-btn">Read More</a> <a
-                    href="blog-details.html" class="comment"><i class="fa-regular fa-comments"></i>3 Comments</a></div>
+            <h3 class="blog-title"><a th:href="@{/blog}">New Restaurant Town Our Ple Award Contract</a></h3>
+            <div class="blog-bottom"><a th:href="@{/blog}" class="line-btn">Read More</a> <a
+                    th:href="@{/blog}" class="comment"><i class="fa-regular fa-comments"></i>3 Comments</a></div>
           </div>
         </div>
       </div>
@@ -1197,12 +1212,12 @@
         <div class="blog-card">
           <div class="blog-img"><img src="/assets/img/blog/blog_1_3.jpg" alt="blog image"></div>
           <div class="blog-content">
-            <div class="blog-meta"><a href="blog.html"><i class="fa-regular fa-user"></i>By Pizzer</a> <a
-                    href="blog.html"><i class="fa-light fa-calendar-days"></i>17 July, 2022</a> <a href="blog.html"><i
+            <div class="blog-meta"><a th:href="@{/blog}"><i class="fa-regular fa-user"></i>By Pizzer</a> <a
+                    th:href="@{/blog}"><i class="fa-light fa-calendar-days"></i>17 July, 2022</a> <a href="blog.html"><i
                     class="fa-regular fa-tag"></i>Burger</a></div>
-            <h3 class="blog-title"><a href="blog-details.html">Innovative Hot Chessy raw Pasta Make Creator.</a></h3>
-            <div class="blog-bottom"><a href="blog-details.html" class="line-btn">Read More</a> <a
-                    href="blog-details.html" class="comment"><i class="fa-regular fa-comments"></i>3 Comments</a></div>
+            <h3 class="blog-title"><a th:href="@{/blog}">Innovative Hot Chessy raw Pasta Make Creator.</a></h3>
+            <div class="blog-bottom"><a th:href="@{/blog}" class="line-btn">Read More</a> <a
+                    th:href="@{/blog}" class="comment"><i class="fa-regular fa-comments"></i>3 Comments</a></div>
           </div>
         </div>
       </div>
@@ -1268,11 +1283,11 @@
             <h3 class="widget_title">Quick Links</h3>
             <div class="menu-all-pages-container">
               <ul class="menu">
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="menufast.html">Menu</a></li>
-                <li><a href="project.html">Testimonial</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a th:href="@{/about}">About Us</a></li>
+                <li><a th:href="@{/fast}">Menu</a></li>
+                <li><a th:href="@{/blog}">Testimonial</a></li>
+                <li><a th:href="@{/blog}">Blog</a></li>
+                <li><a th:href="@{/contact}">Contact Us</a></li>
               </ul>
             </div>
           </div>
@@ -1282,11 +1297,11 @@
             <h3 class="widget_title">Our Menu</h3>
             <div class="menu-all-pages-container">
               <ul class="menu">
-                <li><a href="menufast.html">Burgers</a></li>
-                <li><a href="menufast.html">Desserts</a></li>
-                <li><a href="menufast.html">Pizza</a></li>
-                <li><a href="menufast.html">Pasta</a></li>
-                <li><a href="menufast.html">Indian Kabab</a></li>
+                <li><a th:href="@{/fast}">Burgers</a></li>
+                <li><a th:href="@{/fast}">Desserts</a></li>
+                <li><a th:href="@{/fast}">Pizza</a></li>
+                <li><a th:href="@{/fast}">Pasta</a></li>
+                <li><a th:href="@{/fast}">Indian Kabab</a></li>
               </ul>
             </div>
           </div>
@@ -1373,16 +1388,13 @@
             <p class="text" th:text="${menuItem.description}"></p>
             <!-- Product Actions -->
             <div class="actions">
-              <!-- Quantity Input -->
-              <div class="quantity">
-                <input type="number" class="qty-input" step="1" min="1" max="100" name="quantity" value="1" title="Qty" />
-                <button class="quantity-plus qty-btn"><i class="far fa-chevron-up"></i></button>
-                <button class="quantity-minus qty-btn"><i class="far fa-chevron-down"></i></button>
-              </div>
-              <!-- Add to Cart Button -->
-              <button class="as-btn">Add to Cart</button>
+              <!-- Add to Cart Icon Button -->
+              <a class="icon-btn" th:href="@{'/addtocart/' + ${menuItem.itemId}}">
+                <i class="fas fa-cart-plus"></i> <!-- Font Awesome shopping cart plus icon -->
+              </a>
               <!-- Wishlist Button -->
-              <a class="icon-btn" href="wishlist.html"><i class="fal fa-heart"></i></a>
+              <a class="icon-btn" th:href="@{'/addtowishlist/' + ${menuItem.itemId}}">
+                <i class="fal fa-heart"></i></a>
             </div>
             <!-- Product Meta Information -->
             <div class="product_meta">

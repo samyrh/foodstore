@@ -56,4 +56,15 @@ public class ReservationService implements ReservationManager {
         // Implement logic to retrieve reservations by customer ID
         return reservationRepository.findByCustomer(customer);
     }
+
+    @Override
+    public void addReservation(Long customerId, Reservation reservation) {
+        // Set the customer for the reservation
+        Customer customer = new Customer();
+        customer.setCustomerId(customerId);
+        reservation.setCustomer(customer);
+
+        // Save the reservation using the repository
+        reservationRepository.save(reservation);
+    }
 }

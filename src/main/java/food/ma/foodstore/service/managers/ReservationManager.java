@@ -12,4 +12,6 @@ public interface ReservationManager {
     void updateReservation(Reservation reservation);
     void deleteReservation(Long reservationId);
     List<Reservation> getReservationsByCustomer(Customer customer);
+
+    void addReservation(Long customerId, Reservation reservation);
 }
