@@ -472,36 +472,40 @@
           <h2 class="h4">Billing Details</h2>
           <div class="row">
             <div class="col-md-6 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Username"
-                      name="username"
-              />
+              <label>
+                <input
+                        type="text"
+                        class="form-control"
+                        th:value="${customercheckout.username}"
+                />
+              </label>
             </div>
             <div class="col-md-6 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Address"
-                      name="address"
-              />
+              <label>
+                <input
+                        type="text"
+                        class="form-control"
+                        th:value="${customercheckout.address}"
+                />
+              </label>
             </div>
             <div class="col-12 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Email"
-                      name="email"
-              />
+              <label>
+                <input
+                        type="text"
+                        class="form-control"
+                        th:value="${customercheckout.email}"
+                />
+              </label>
             </div>
             <div class="col-12 form-group">
-              <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Phone Number"
-                      name="phoneNumber"
-              />
+              <label>
+                <input
+                        type="text"
+                        class="form-control"
+                        th:value="${customercheckout.phoneNumber}"
+                />
+              </label>
             </div>
           </div>
         </div>

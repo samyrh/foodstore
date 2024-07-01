@@ -2,7 +2,6 @@ package food.ma.foodstore.web.controllers;
 
 import food.ma.foodstore.dao.entities.Customer;
 import food.ma.foodstore.dao.repositories.CustomerRepository;
-import food.ma.foodstore.service.managers.CustomerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    @Autowired
-    private CustomerManager customerManager;
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -35,8 +32,8 @@ public class AuthController {
                                    @RequestParam("address") String address,
                                    @RequestParam("phoneNumber") String phoneNumber,
                                    Model model) {
-        // Your registration logic here
-        // Create a new Customer object and save to database, etc.
+
+
         Customer newCustomer = new Customer();
         newCustomer.setUsername(username);
         newCustomer.setEmail(email);

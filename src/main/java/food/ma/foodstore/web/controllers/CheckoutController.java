@@ -2,6 +2,7 @@ package food.ma.foodstore.web.controllers;
 
 
 import food.ma.foodstore.dao.entities.CartItem;
+import food.ma.foodstore.dao.entities.Customer;
 import food.ma.foodstore.dao.repositories.CustomerRepository;
 import food.ma.foodstore.service.managers.CartManager;
 import food.ma.foodstore.service.services.CartService;
@@ -38,6 +39,11 @@ public class CheckoutController {
 
             // Retrieve the customer ID by username (you might need to modify this based on your CustomerRepository method)
             Long customerId = customerRepository.findCustomerByUsername(username).getCustomerId();
+
+
+            Customer customer = customerRepository.getReferenceById(customerId);
+            model.addAttribute("customercheckout", customer);
+
 
             // Get the cart items for the customer
             List<CartItem> cartItems = cartService.getCartItemsForCustomer(customerId);
